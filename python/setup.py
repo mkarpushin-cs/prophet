@@ -17,6 +17,7 @@ from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 from setuptools.command.develop import develop
 from setuptools.command.test import test as test_command
+from setuptools.dist import Distribution
 from typing import List
 
 PLATFORM = 'unix'
@@ -114,6 +115,11 @@ class TestCommand(test_command):
             sys.modules.update(old_modules)
             working_set.__init__()
 
+class PlatformSpecificDistribution(Distribution):
+    """Distribution forcing a platform-specific package """
+    def has_ext_modules(foo):
+        return True
+
 with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
@@ -148,4 +154,5 @@ setup(
     ],
     long_description=long_description,
     long_description_content_type='text/markdown',
+    distclass=PlatformSpecificDistribution
 )
